@@ -1,0 +1,81 @@
+<footer class="bg-gray-900 text-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+                <h3 class="text-xl font-bold mb-6">
+                    <%= settings.siteName || 'Estate' %>
+                </h3>
+                <p class="text-gray-400 mb-6">
+                    <% if (typeof content !== 'undefined' && content.footer?.text) { %>
+                        <%= content.footer.text %>
+                    <% } else { %>
+                        Luxury living redefined. Find your dream home with us.
+                    <% } %>
+                </p>
+                <div class="flex gap-4">
+                    <% if (settings.socialLinks?.facebook) { %>
+                        <a href="<%= settings.socialLinks.facebook %>"
+                            class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg></a>
+                        <% } %>
+                            <!-- Add more social icons as needed -->
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-6">Contact Us</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <% if (settings.officeAddress) { %>
+                        <li class="flex gap-3"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <%= settings.officeAddress %>
+                        </li>
+                        <% } %>
+                            <% if (settings.email) { %>
+                                <li class="flex gap-3"><svg class="w-5 h-5 text-primary" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    <%= settings.email %>
+                                </li>
+                                <% } %>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-6">Legal</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <% if (typeof content !== 'undefined' && content.footer?.legalLinks) { %>
+                        <% content.footer.legalLinks.forEach(link=> { %>
+                            <li><a href="<%= link.url %>" class="hover:text-white transition">
+                                    <%= link.label %>
+                                </a></li>
+                            <% }) %>
+                    <% } else { %>
+                        <!-- Default legal links -->
+                        <li><a href="/privacy" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="/terms" class="hover:text-white transition">Terms of Service</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+            <p>
+                <% if (typeof content !== 'undefined' && content.footer?.copyright) { %>
+                    <%= content.footer.copyright %>
+                <% } else { %>
+                    © <%= new Date().getFullYear() %> <%= settings.siteName || 'Estate' %>. All rights reserved.
+                <% } %>
+            </p>
+        </div>
+    </div>
+</footer>
