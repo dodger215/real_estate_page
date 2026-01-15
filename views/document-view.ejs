@@ -1,0 +1,301 @@
+<style>
+    .document-body {
+        font-family: 'Merriweather', serif;
+    }
+
+    .signature-input {
+        font-family: cursive;
+    }
+
+    /* Print styles for A4 */
+    @media print {
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .no-print {
+            display: none;
+        }
+    }
+</style>
+
+<div id="app" class="min-h-screen pt-32 pb-12 px-4">
+    <!-- Loading State -->
+    <div id="loading" class="text-center p-8">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p class="mt-4 text-gray-600 font-sans">Loading document...</p>
+    </div>
+
+    <!-- Success State -->
+    <div id="success" class="hidden p-8 text-center font-sans">
+        <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-10 border border-gray-100">
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-3 text-gray-900">Submission Received</h2>
+            <p class="text-gray-600 leading-relaxed">Thank you for submitting the document. We will review it shortly
+                and get back to you.</p>
+            <a href="/"
+                class="mt-8 inline-block px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-primary transition-all">Return
+                Home</a>
+        </div>
+    </div>
+
+    <!-- Document Container - Two Column Layout -->
+    <div id="document-container" class="hidden max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Left Column: Document Content -->
+            <div class="bg-white shadow-2xl rounded-3xl overflow-hidden document-body border border-gray-100">
+                <!-- Header Image -->
+                <div id="header-image" class="hidden w-full h-56 overflow-hidden border-b border-gray-100">
+                    <img id="template-image" src="" alt="Document Header" class="w-full h-full object-cover">
+                </div>
+
+                <div class="p-10 md:p-14">
+                    <!-- Header Info -->
+                    <div class="mb-10 text-center border-b-2 border-gray-900 pb-8">
+                        <h1 id="template-name" class="text-4xl font-bold uppercase tracking-[0.2em] mb-4 text-gray-900">
+                        </h1>
+                        <div id="template-description"
+                            class="text-lg text-gray-500 italic max-w-2xl mx-auto font-sans leading-relaxed">
+                        </div>
+                    </div>
+
+                    <!-- Rich Text Content -->
+                    <div id="template-content"
+                        class="prose prose-base md:prose-lg max-w-none prose-p:text-justify prose-headings:font-serif prose-headings:uppercase prose-headings:tracking-widest text-gray-800 leading-relaxed">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Form Section -->
+            <div class="lg:sticky lg:top-36 h-fit">
+                <div class="bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
+                    <div class="p-10">
+                        <h3
+                            class="text-2xl font-bold mb-8 font-sans uppercase text-gray-900 tracking-wider flex items-center gap-3">
+                            <span class="w-8 h-1 bg-primary rounded-full"></span>
+                            Required Information
+                        </h3>
+                        <div class="font-sans">
+                            <form id="submission-form" class="space-y-6">
+                                <div id="form-fields" class="space-y-6"></div>
+
+                                <div class="pt-4">
+                                    <button type="submit" id="submit-btn"
+                                        class="w-full h-14 text-lg uppercase tracking-[0.1em] font-black bg-gray-900 hover:bg-primary hover:scale-[1.02] text-white rounded-2xl transition-all duration-300 shadow-xl shadow-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                        Submit Document
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Info -->
+                <div class="mt-8 p-6 text-center text-xs text-gray-400 font-sans tracking-widest uppercase">
+                    <p>Verified Secure &bull; <%= settings.siteName || 'Estate Page System' %> &bull; <%= new
+                                Date().getFullYear() %>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden p-12 text-center font-sans">
+        <div
+            class="max-w-md mx-auto bg-white rounded-3xl shadow-xl p-10 border border-red-50 border-t-4 border-t-red-500">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+            <h2 class="text-xl font-bold mb-2 text-gray-900">Access Error</h2>
+            <p id="error-message" class="text-gray-600 mb-6"></p>
+            <a href="/"
+                class="inline-block px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-primary transition-colors">Return
+                Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const submissionId = '<%= submissionId %>';
+    let templateData = null;
+    const initialError = '<%= typeof error !== "undefined" ? error : "" %>';
+
+    if (initialError) {
+        showError(initialError);
+    } else {
+        fetchData();
+    }
+
+    // Fetch submission data
+    async function fetchData() {
+        try {
+            const response = await fetch(`/api/public/submission/${submissionId}`);
+
+            if (response.status === 403) {
+                window.location.href = `/public/verify/${submissionId}`;
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Failed to load document');
+            }
+
+            const data = await response.json();
+            templateData = data;
+            renderView(data);
+        } catch (err) {
+            showError(err.message);
+        }
+    }
+
+    function renderView(data) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('document-container').classList.remove('hidden');
+
+        const template = data.template;
+
+        // Render template info
+        document.getElementById('template-name').textContent = template.name;
+        if (template.description) {
+            document.getElementById('template-description').innerHTML = template.description;
+        }
+        document.getElementById('template-content').innerHTML = template.content;
+
+        if (template.imageUrl) {
+            const headerImg = document.getElementById('header-image');
+            headerImg.classList.remove('hidden');
+            document.getElementById('template-image').src = template.imageUrl;
+        }
+
+        // Render form fields
+        renderForm(template.formSchema || []);
+    }
+
+    function renderForm(schema) {
+        const container = document.getElementById('form-fields');
+        container.innerHTML = '';
+
+        schema.forEach((field, index) => {
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'group';
+
+            const label = document.createElement('label');
+            label.className = 'block font-bold text-sm mb-2 text-gray-700 uppercase tracking-wider transition-colors group-focus-within:text-primary';
+            label.textContent = field.label;
+            if (field.required) {
+                const required = document.createElement('span');
+                required.className = 'text-primary ml-1';
+                required.textContent = '*';
+                label.appendChild(required);
+            }
+            fieldDiv.appendChild(label);
+
+            let input;
+            if (field.type === 'textarea') {
+                input = document.createElement('textarea');
+                input.rows = 4;
+                input.className = 'w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all';
+            } else if (field.type === 'date') {
+                input = document.createElement('input');
+                input.type = 'date';
+                input.className = 'w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all';
+            } else if (field.type === 'signature') {
+                const sigContainer = document.createElement('div');
+                sigContainer.className = 'bg-gray-50 border border-gray-200 rounded-2xl p-6 border-dashed border-gray-300 group-focus-within:border-primary transition-all';
+
+                input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Type full legal name to sign';
+                input.className = 'signature-input w-full text-3xl border-none focus:outline-none bg-transparent px-0 text-gray-900 italic font-serif';
+
+                const note = document.createElement('p');
+                note.className = 'text-[10px] text-gray-400 mt-4 uppercase tracking-widest';
+                note.textContent = 'By typing your name you agree to sign this document electronically.';
+
+                sigContainer.appendChild(input);
+                sigContainer.appendChild(note);
+                fieldDiv.appendChild(sigContainer);
+            } else {
+                input = document.createElement('input');
+                input.type = field.type || 'text';
+                input.className = 'w-full h-14 px-5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all';
+            }
+
+            input.name = field.label;
+            input.required = field.required;
+
+            if (field.type !== 'signature') {
+                fieldDiv.appendChild(input);
+            }
+
+            // Add description if exists
+            if (field.description) {
+                const desc = document.createElement('div');
+                desc.className = 'text-xs text-gray-500 mt-2 italic px-1';
+                desc.innerHTML = field.description;
+                fieldDiv.appendChild(desc);
+            }
+
+            container.appendChild(fieldDiv);
+        });
+    }
+
+    // Handle form submission
+    document.getElementById('submission-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+
+        const formData = new FormData(e.target);
+        const values = {};
+
+        for (let [key, value] of formData.entries()) {
+            values[key] = value;
+        }
+
+        try {
+            const response = await fetch('/api/public/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    submissionId: submissionId,
+                    values: values
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit document');
+            }
+
+            document.getElementById('document-container').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+            alert('Error: ' + err.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Document';
+        }
+    });
+
+    function showError(message) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('error-message').textContent = message;
+    }
+
+    fetchData();
+</script>

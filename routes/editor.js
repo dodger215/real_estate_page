@@ -4,6 +4,9 @@ const editorController = require('../controllers/editorController');
 const auth = require('../middleware/auth');
 
 // Properties
+router.get('/properties/deleted', auth, editorController.getDeletedProperties);
+router.post('/properties/:id/restore', auth, editorController.restoreProperty);
+router.delete('/properties/:id/permanent', auth, editorController.permanentDeleteProperty);
 router.get('/properties', editorController.getProperties);
 router.get('/properties/:id', editorController.getProperty);
 router.post('/properties', auth, editorController.createProperty);
@@ -18,6 +21,9 @@ router.patch('/blogs/:id', auth, editorController.updateBlog);
 router.delete('/blogs/:id', auth, editorController.deleteBlog);
 
 // Agents
+router.get('/agents/deleted', auth, editorController.getDeletedAgents);
+router.post('/agents/:id/restore', auth, editorController.restoreAgent);
+router.delete('/agents/:id/permanent', auth, editorController.permanentDeleteAgent);
 router.get('/agents', editorController.getAgents);
 router.get('/agents/:id', editorController.getAgent);
 router.post('/agents', auth, editorController.createAgent);

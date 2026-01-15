@@ -12,62 +12,91 @@
                     <div class="absolute inset-0 bg-black/40"></div>
                 </div>
 
-                <div class="container mx-auto px-4 relative z-10">
+                <div class="container mx-auto px-4 relative z-10 pt-24 md:pt-0">
                     <div class="max-w-3xl text-white">
                         <% if (content.hero?.showBadge) { %>
                             <span
-                                class="inline-block bg-primary text-white px-4 py-1 rounded-full text-sm font-bold mb-6 uppercase tracking-wider">
+                                class="inline-block bg-primary text-white px-4 py-1 rounded-full text-[10px] md:text-sm font-bold mb-6 uppercase tracking-[0.2em]">
                                 <%= content.hero?.badgeText || 'New Listing' %>
                             </span>
                             <% } %>
-                                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                                <h1
+                                    class="text-3xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tighter uppercase">
                                     <%= content.hero?.headline || 'Find Your Perfect Luxury Home' %>
                                 </h1>
-                                <p class="text-xl md:text-2xl mb-10 text-gray-200">
+                                <p
+                                    class="text-base md:text-2xl mb-12 text-gray-300 font-medium max-w-2xl leading-relaxed">
                                     <%= content.hero?.subheadline
                                         || 'Experience premium living in the heart of the city with our exclusive property listings.'
                                         %>
                                 </p>
-                                <div class="flex flex-wrap gap-4 mb-12">
+                                <div class="flex flex-wrap gap-4 mb-16">
                                     <a href="#contact"
-                                        class="bg-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:opacity-90 transition shadow-xl shadow-primary/30">
+                                        class="bg-primary text-white px-8 py-4 rounded-full font-black text-xs md:text-sm tracking-widest uppercase hover:opacity-90 transition shadow-2xl shadow-primary/30 active:scale-95">
                                         <%= content.hero?.ctaText || 'Schedule a Viewing' %>
                                     </a>
                                     <a href="/properties"
-                                        class="bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full font-bold text-lg hover:bg-white/30 transition">
+                                        class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full font-black text-xs md:text-sm tracking-widest uppercase hover:bg-white/20 transition active:scale-95">
                                         Browse Listings
                                     </a>
                                 </div>
 
-                                <!-- Quick Search -->
                                 <div
-                                    class="bg-white/10 backdrop-blur-xl p-2 rounded-3xl border border-white/20 max-w-2xl">
-                                    <form action="/properties" method="GET" class="flex flex-col md:flex-row gap-2">
+                                    class="hidden md:block bg-white/10 backdrop-blur-xl p-2 rounded-3xl border border-white/20 max-w-2xl">
+                                    <form action="/properties" method="GET" class="flex flex-row gap-2">
                                         <select name="type"
-                                            class="bg-transparent text-white px-6 py-3 outline-none border-r border-white/10">
+                                            class="bg-transparent text-white px-6 py-3 outline-none border-r border-white/10 uppercase font-black text-xs tracking-widest">
                                             <option value="" class="text-black">All Types</option>
                                             <option value="Apartment" class="text-black">Apartment</option>
                                             <option value="Villa" class="text-black">Villa</option>
                                         </select>
                                         <input type="text" name="location" placeholder="Location..."
-                                            class="bg-transparent text-white px-6 py-3 outline-none flex-grow placeholder:text-white/60">
+                                            class="bg-transparent text-white px-6 py-3 outline-none flex-grow placeholder:text-white/60 font-bold">
                                         <button type="submit"
-                                            class="bg-primary text-white px-8 py-3 rounded-2xl font-bold hover:opacity-90 transition">
+                                            class="bg-primary text-white px-8 py-3 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:opacity-90 transition shadow-lg shadow-primary/20">
                                             Search
                                         </button>
                                     </form>
+                                </div>
+
+                                <!-- Mobile Search Trigger -->
+                                <div class="md:hidden w-full">
+                                    <button onclick="toggleHomeSearch(true)"
+                                        class="w-full bg-white/10 backdrop-blur-xl p-5 rounded-[2rem] border border-white/20 flex items-center justify-between group active:scale-95 transition-all">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="text-left">
+                                                <p class="text-xs font-black text-gray-400 uppercase tracking-widest">
+                                                    Search</p>
+                                                <p class="text-sm font-bold text-white">Find your perfect home...</p>
+                                            </div>
+                                        </div>
+                                        <svg class="w-5 h-5 text-white/40" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                     </div>
                 </div>
             </section>
 
             <!-- Featured Properties -->
-            <section class="py-24 bg-white">
+            <section class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
                 <div class="container mx-auto px-4">
                     <div class="flex justify-between items-end mb-12">
                         <div>
-                            <h2 class="text-4xl font-bold mb-4">Featured Properties</h2>
-                            <p class="text-gray-600">Handpicked luxury listings just for you.</p>
+                            <h2 class="text-4xl font-bold mb-4 dark:text-white">Featured Properties</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Handpicked luxury listings just for you.</p>
                         </div>
                         <a href="/properties" class="text-primary font-bold hover:underline">View All Properties →</a>
                     </div>
@@ -79,22 +108,22 @@
                                         class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                     <div class="absolute top-6 left-6">
                                         <span
-                                            class="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                                            class="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-gray-900">
                                             <%= property.type %>
                                         </span>
                                     </div>
                                 </div>
-                                <h3 class="text-2xl font-bold mb-2">
+                                <h3 class="text-2xl font-bold mb-2 dark:text-white">
                                     <%= property.title %>
                                 </h3>
-                                <p class="text-gray-500 mb-4">
+                                <p class="text-gray-500 mb-4 dark:text-gray-400">
                                     <%= property.location %>
                                 </p>
                                 <div class="flex justify-between items-center">
                                     <span class="text-2xl font-bold text-primary">₵‎<%= property.price?.toLocaleString()
                                             || property.priceRange %></span>
                                     <a href="/properties/<%= property.slug %>"
-                                        class="w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-primary transition">
+                                        class="w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-primary transition dark:bg-white dark:text-gray-900 dark:hover:bg-primary dark:hover:text-white">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -108,11 +137,12 @@
             </section>
             <% } else if (section==='trust' ) { %>
                 <!-- Trust Signals -->
-                <section class="py-12 bg-white border-b">
+                <section
+                    class="py-12 bg-white dark:bg-gray-900 border-b dark:border-gray-800 transition-colors duration-300">
                     <div class="container mx-auto px-4">
                         <div
                             class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition duration-500">
-                            
+
                             <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png"
                                 class="h-8">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1024px-Google_2015_logo.svg.png"
@@ -126,14 +156,14 @@
                 </section>
                 <% } else if (section==='property' ) { %>
                     <!-- Property Overview -->
-                    <section id="details" class="py-24 bg-white">
+                    <section id="details" class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
                         <div class="container mx-auto px-4">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                                 <div>
-                                    <h2 class="text-4xl font-bold mb-8">
+                                    <h2 class="text-4xl font-bold mb-8 dark:text-white">
                                         <%= content.property?.title || 'Property Overview' %>
                                     </h2>
-                                    <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
                                         <%= content.property?.description
                                             || 'This stunning property offers a perfect blend of modern architecture and comfortable living spaces.'
                                             %>
@@ -151,8 +181,8 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm text-gray-500">Type</p>
-                                                <p class="font-bold">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">Type</p>
+                                                <p class="font-bold dark:text-white">
                                                     <%= content.property?.type || 'Apartment' %>
                                                 </p>
                                             </div>
@@ -171,8 +201,8 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm text-gray-500">Location</p>
-                                                <p class="font-bold">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">Location</p>
+                                                <p class="font-bold dark:text-white">
                                                     <%= content.property?.location || 'Downtown' %>
                                                 </p>
                                             </div>
@@ -189,8 +219,8 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm text-gray-500">Size</p>
-                                                <p class="font-bold">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">Size</p>
+                                                <p class="font-bold dark:text-white">
                                                     <%= content.property?.size || '120 sqm' %>
                                                 </p>
                                             </div>
@@ -207,7 +237,7 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm text-gray-500">Price</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">Price</p>
                                                 <p class="font-bold text-primary text-xl">
                                                     <%= content.property?.price || 'From ₵‎250,000' %>
                                                 </p>
@@ -219,17 +249,17 @@
                                     <img src="https://images.unsplash.com/photo-1600607687940-4e524cb35d37?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                                         class="rounded-3xl shadow-2xl">
                                     <div
-                                        class="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-xl hidden md:block">
+                                        class="absolute -bottom-8 -left-8 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hidden md:block">
                                         <div class="flex items-center gap-4">
                                             <div class="flex -space-x-3">
                                                 <img src="https://i.pravatar.cc/40?u=1"
-                                                    class="w-10 h-10 rounded-full border-2 border-white">
+                                                    class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
                                                 <img src="https://i.pravatar.cc/40?u=2"
-                                                    class="w-10 h-10 rounded-full border-2 border-white">
+                                                    class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
                                                 <img src="https://i.pravatar.cc/40?u=3"
-                                                    class="w-10 h-10 rounded-full border-2 border-white">
+                                                    class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
                                             </div>
-                                            <p class="text-sm font-semibold">Joined by 500+ families</p>
+                                            <p class="text-sm font-semibold dark:text-white">Joined by 500+ families</p>
                                         </div>
                                     </div>
                                 </div>
@@ -238,17 +268,18 @@
                     </section>
                     <% } else if (section==='features' ) { %>
                         <!-- Features -->
-                        <section class="py-24 bg-gray-50">
+                        <section class="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                             <div class="container mx-auto px-4">
                                 <div class="text-center max-w-2xl mx-auto mb-16">
-                                    <h2 class="text-4xl font-bold mb-4">Premium Amenities</h2>
-                                    <p class="text-gray-600">Everything you need for a comfortable and luxurious
+                                    <h2 class="text-4xl font-bold mb-4 dark:text-white">Premium Amenities</h2>
+                                    <p class="text-gray-600 dark:text-gray-400">Everything you need for a comfortable
+                                        and luxurious
                                         lifestyle.</p>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     <% (content.features || []).filter(f=> f.enabled).forEach(feature => { %>
                                         <div
-                                            class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
+                                            class="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-600">
                                             <div
                                                 class="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center text-primary mb-6">
                                                 <!-- Placeholder icon -->
@@ -259,10 +290,11 @@
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <h3 class="text-xl font-bold mb-3">
+                                            <h3 class="text-xl font-bold mb-3 dark:text-white">
                                                 <%= feature.name %>
                                             </h3>
-                                            <p class="text-gray-500">High-quality standards and modern design for your
+                                            <p class="text-gray-500 dark:text-gray-400">High-quality standards and
+                                                modern design for your
                                                 comfort.</p>
                                         </div>
                                         <% }) %>
@@ -270,21 +302,22 @@
                             </div>
                         </section>
                         <% } else if (section==='location' ) { %>
-                            <section class="py-24 bg-white">
+                            <section class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
                                 <div class="container mx-auto px-4">
                                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                                        <div class="h-[400px] rounded-3xl overflow-hidden shadow-xl border">
+                                        <div
+                                            class="h-[400px] rounded-3xl overflow-hidden shadow-xl border dark:border-gray-700">
                                             <iframe
                                                 src="<%= content.location?.mapEmbed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.83543450937!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1625123456789!5m2!1sen!2sus' %>"
                                                 width="100%" height="100%" style="border:0;" allowfullscreen=""
                                                 loading="lazy"></iframe>
                                         </div>
                                         <div>
-                                            <h2 class="text-4xl font-bold mb-6">Prime Location</h2>
-                                            <p class="text-lg text-gray-600 mb-8">
+                                            <h2 class="text-4xl font-bold mb-6 dark:text-white">Prime Location</h2>
+                                            <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
                                                 <%= content.location?.address %>
                                             </p>
-                                            <p class="text-gray-500 leading-relaxed">
+                                            <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
                                                 <%= content.location?.neighborhoodDescription %>
                                             </p>
                                         </div>
@@ -293,7 +326,8 @@
                             </section>
                             <% } else if (section==='contact' ) { %>
                                 <!-- Lead Capture Form -->
-                                <section id="contact" class="py-24 bg-white">
+                                <section id="contact"
+                                    class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
                                     <div class="container mx-auto px-4">
                                         <div
                                             class="max-w-5xl mx-auto bg-gray-900 rounded-[3rem] overflow-hidden shadow-2xl flex flex-col md:flex-row">
@@ -326,31 +360,36 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="md:w-1/2 bg-white p-12 md:p-16">
+                                            <div
+                                                class="md:w-1/2 bg-white dark:bg-gray-800 p-12 md:p-16 transition-colors duration-300">
                                                 <form id="lead-form" class="space-y-6">
                                                     <div>
-                                                        <label class="block text-sm font-semibold mb-2">Full
+                                                        <label
+                                                            class="block text-sm font-semibold mb-2 dark:text-white">Full
                                                             Name</label>
                                                         <input type="text" name="name" required
-                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white dark:bg-gray-700 dark:text-white">
                                                     </div>
                                                     <div>
-                                                        <label class="block text-sm font-semibold mb-2">Email
+                                                        <label
+                                                            class="block text-sm font-semibold mb-2 dark:text-white">Email
                                                             Address</label>
                                                         <input type="email" name="email" required
-                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white dark:bg-gray-700 dark:text-white">
                                                     </div>
                                                     <div>
-                                                        <label class="block text-sm font-semibold mb-2">Phone
+                                                        <label
+                                                            class="block text-sm font-semibold mb-2 dark:text-white">Phone
                                                             Number</label>
                                                         <input type="tel" name="phone" required
-                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition">
+                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white dark:bg-gray-700 dark:text-white">
                                                     </div>
                                                     <div>
-                                                        <label class="block text-sm font-semibold mb-2">Message
+                                                        <label
+                                                            class="block text-sm font-semibold mb-2 dark:text-white">Message
                                                             (Optional)</label>
                                                         <textarea name="message" rows="3"
-                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"></textarea>
+                                                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white dark:bg-gray-700 dark:text-white"></textarea>
                                                     </div>
                                                     <button type="submit"
                                                         class="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg shadow-primary/20">
@@ -362,17 +401,19 @@
                                     </div>
                                 </section>
                                 <% } else if (section==='testimonials' ) { %>
-                                    <section class="py-24 bg-gray-50">
+                                    <section class="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                                         <div class="container mx-auto px-4">
                                             <div class="text-center mb-16">
-                                                <h2 class="text-4xl font-bold mb-4">What Our Clients Say</h2>
-                                                <p class="text-gray-600">Real stories from real families who found their
+                                                <h2 class="text-4xl font-bold mb-4 dark:text-white">What Our Clients Say
+                                                </h2>
+                                                <p class="text-gray-600 dark:text-gray-400">Real stories from real
+                                                    families who found their
                                                     dream home with us.</p>
                                             </div>
                                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                                                 <% (content.testimonials || []).forEach(t=> { %>
                                                     <div
-                                                        class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+                                                        class="bg-white dark:bg-gray-700 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-600">
                                                         <div class="flex gap-1 text-yellow-400 mb-6">
                                                             <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
                                                                 <path
@@ -400,12 +441,13 @@
                                                                 </path>
                                                             </svg>
                                                         </div>
-                                                        <p class="text-gray-600 mb-8 italic">"<%= t.content %>"</p>
+                                                        <p class="text-gray-600 mb-8 italic dark:text-gray-300">"<%=
+                                                                t.content %>"</p>
                                                         <div class="flex items-center gap-4">
                                                             <img src="<%= t.avatar || 'https://i.pravatar.cc/100' %>"
                                                                 class="w-12 h-12 rounded-full object-cover">
                                                             <div>
-                                                                <p class="font-bold">
+                                                                <p class="font-bold dark:text-white">
                                                                     <%= t.name %>
                                                                 </p>
                                                                 <p class="text-sm text-gray-400">
@@ -419,18 +461,21 @@
                                         </div>
                                     </section>
                                     <% } else if (section==='faq' ) { %>
-                                        <section class="py-24 bg-white">
+                                        <section class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
                                             <div class="container mx-auto px-4 max-w-4xl">
                                                 <div class="text-center mb-16">
-                                                    <h2 class="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-                                                    <p class="text-gray-600">Everything you need to know about buying
+                                                    <h2 class="text-4xl font-bold mb-4 dark:text-white">Frequently Asked
+                                                        Questions</h2>
+                                                    <p class="text-gray-600 dark:text-gray-400">Everything you need to
+                                                        know about buying
                                                         and renting with us.</p>
                                                 </div>
                                                 <div class="space-y-4">
                                                     <% (content.faq || []).forEach((item, index)=> { %>
-                                                        <div class="border border-gray-100 rounded-2xl overflow-hidden">
+                                                        <div
+                                                            class="border border-gray-100 dark:border-gray-700 rounded-2xl overflow-hidden">
                                                             <button onclick="toggleFaq(<%= index %>)"
-                                                                class="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-50 transition">
+                                                                class="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition bg-white dark:bg-gray-800 dark:text-white">
                                                                 <span class="text-lg font-bold text-left">
                                                                     <%= item.question %>
                                                                 </span>
@@ -442,7 +487,7 @@
                                                                 </svg>
                                                             </button>
                                                             <div id="faq-answer-<%= index %>"
-                                                                class="hidden px-8 pb-6 text-gray-600 leading-relaxed">
+                                                                class="hidden px-8 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-800">
                                                                 <%= item.answer %>
                                                             </div>
                                                         </div>
@@ -484,4 +529,142 @@
                                                             showAlert('Error', 'Failed to connect to server.', 'error');
                                                         }
                                                     });
+
+                                                    // Home Search Bottom Sheet Logic
+                                                    function toggleHomeSearch(show) {
+                                                        const backdrop = document.getElementById('home-search-backdrop');
+                                                        const sheet = document.getElementById('home-search-sheet');
+
+                                                        if (show) {
+                                                            backdrop.classList.remove('pointer-events-none', 'opacity-0');
+                                                            backdrop.classList.add('opacity-100');
+                                                            sheet.classList.remove('translate-y-full');
+                                                            document.body.style.overflow = 'hidden';
+                                                        } else {
+                                                            backdrop.classList.remove('opacity-100');
+                                                            backdrop.classList.add('opacity-0');
+                                                            sheet.classList.add('translate-y-full');
+                                                            document.body.style.overflow = '';
+                                                            setTimeout(() => {
+                                                                backdrop.classList.add('pointer-events-none');
+                                                            }, 500);
+                                                        }
+                                                    }
+
+                                                    // Simple Swipe Down to Close
+                                                    const homeSearchSheet = document.getElementById('home-search-sheet');
+                                                    let homeSearchStartY = 0;
+
+                                                    homeSearchSheet?.addEventListener('touchstart', (e) => {
+                                                        homeSearchStartY = e.touches[0].clientY;
+                                                    });
+
+                                                    homeSearchSheet?.addEventListener('touchmove', (e) => {
+                                                        const touchY = e.touches[0].clientY;
+                                                        const diff = touchY - homeSearchStartY;
+                                                        if (diff > 0) {
+                                                            homeSearchSheet.style.transform = `translateY(${diff}px)`;
+                                                        }
+                                                    });
+
+                                                    homeSearchSheet?.addEventListener('touchend', (e) => {
+                                                        const touchY = e.changedTouches[0].clientY;
+                                                        const diff = touchY - homeSearchStartY;
+                                                        if (diff > 100) {
+                                                            toggleHomeSearch(false);
+                                                        } else {
+                                                            homeSearchSheet.style.transform = '';
+                                                        }
+                                                    });
                                                 </script>
+
+                                                <!-- Home Search Bottom Sheet -->
+                                                <div id="home-search-backdrop" onclick="toggleHomeSearch(false)"
+                                                    class="md:hidden fixed inset-0 bg-gray-900/90 backdrop-blur-xl z-[100] opacity-0 pointer-events-none transition-all duration-500">
+                                                </div>
+
+                                                <div id="home-search-sheet"
+                                                    class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 rounded-t-[3rem] z-[110] transform translate-y-full transition-transform duration-500 ease-out shadow-[0_-20px_80px_rgba(0,0,0,0.4)] border-t border-white/5">
+                                                    <!-- Handle -->
+                                                    <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full mx-auto mt-4 mb-8"
+                                                        onclick="toggleHomeSearch(false)"></div>
+
+                                                    <div class="px-8 pb-16">
+                                                        <h2
+                                                            class="text-4xl font-black text-gray-900 dark:text-white uppercase tracking-tighter mb-10">
+                                                            Find Your Home</h2>
+
+                                                        <form action="/properties" method="GET" class="space-y-10">
+                                                            <div>
+                                                                <label
+                                                                    class="block text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Property
+                                                                    Type</label>
+                                                                <div class="grid grid-cols-2 gap-3">
+                                                                    <label class="relative group cursor-pointer">
+                                                                        <input type="radio" name="type" value="" checked
+                                                                            class="peer sr-only">
+                                                                        <div
+                                                                            class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+                                                                            <span
+                                                                                class="text-sm font-bold dark:text-white">All
+                                                                                Types</span>
+                                                                        </div>
+                                                                    </label>
+                                                                    <label class="relative group cursor-pointer">
+                                                                        <input type="radio" name="type"
+                                                                            value="Apartment" class="peer sr-only">
+                                                                        <div
+                                                                            class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+                                                                            <span
+                                                                                class="text-sm font-bold dark:text-white">Apartment</span>
+                                                                        </div>
+                                                                    </label>
+                                                                    <label class="relative group cursor-pointer">
+                                                                        <input type="radio" name="type" value="Villa"
+                                                                            class="peer sr-only">
+                                                                        <div
+                                                                            class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+                                                                            <span
+                                                                                class="text-sm font-bold dark:text-white">Villa</span>
+                                                                        </div>
+                                                                    </label>
+                                                                    <label class="relative group cursor-pointer">
+                                                                        <input type="radio" name="type" value="Land"
+                                                                            class="peer sr-only">
+                                                                        <div
+                                                                            class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+                                                                            <span
+                                                                                class="text-sm font-bold dark:text-white">Land</span>
+                                                                        </div>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <label
+                                                                    class="block text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Location</label>
+                                                                <div class="relative group">
+                                                                    <input type="text" name="location"
+                                                                        placeholder="City, Area or Landmark..."
+                                                                        class="w-full h-16 px-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-gray-900 dark:text-white font-bold transition-all outline-none">
+                                                                    <svg class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                                                                        fill="none" stroke="currentColor"
+                                                                        viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                                                        </path>
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="submit"
+                                                                class="w-full h-20 bg-primary text-white rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 active:scale-[0.98] transition-all">
+                                                                Show Properties
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>

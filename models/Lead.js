@@ -11,6 +11,9 @@ const leadSchema = new mongoose.Schema({
     status: { type: String, enum: ['new', 'contacted', 'assigned', 'closed'], default: 'new' },
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     source: String, // e.g. 'hero_form', 'footer_form'
+    otp: String,
+    otpExpires: Date,
+    isVerified: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Lead', leadSchema);

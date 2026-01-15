@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -17,7 +17,8 @@ const expressLayouts = require('express-ejs-layouts');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(expressLayouts);
 
 // View Engine
@@ -32,6 +33,9 @@ mongoose.connect(
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
+const templateRoutes = require('./routes/templates');
+const publicRoutes = require('./routes/public');
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/content', require('./routes/content'));
@@ -39,6 +43,10 @@ app.use('/api/leads', require('./routes/leads'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/editor', require('./routes/editor'));
 app.use('/api/upload', require('./routes/uploader'));
+app.use('/api/templates', templateRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/public', publicRoutes); // Mount public view routes
+
 
 // Landing Page Route
 app.get('/', async (req, res) => {
@@ -93,11 +101,11 @@ app.get('/about', async (req, res) => {
         const settings = await SiteSettings.findOne() || {};
         const content = await PageContent.findOne() || {};
         const agents = await Agent.find({ isFeatured: true });
-        res.render('about', { 
-            settings, 
+        res.render('about', {
+            settings,
             aboutContent: content.about || {}, // Pass just the about part
             content: content, // Pass full content for footer
-            agents 
+            agents
         });
     } catch (err) {
         console.error(err);
@@ -111,8 +119,8 @@ app.get('/contact', async (req, res) => {
         const settings = await SiteSettings.findOne() || {};
         const content = await PageContent.findOne() || {};
         const agents = await Agent.find({ isFeatured: true }); // Add if needed
-        res.render('contact', { 
-            settings, 
+        res.render('contact', {
+            settings,
             contactContent: content.contactPage || {}, // Specific contact content
             content: content, // Full content for footer
             agents // Add this if you want to show agents on contact page

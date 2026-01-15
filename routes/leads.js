@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Lead = require('../models/Lead');
 const auth = require('../middleware/auth');
+const { sendInquiryThankYou } = require('../services/mailService');
 
 // Submit lead (Public)
 router.post('/', async (req, res) => {
@@ -17,6 +18,10 @@ router.post('/', async (req, res) => {
             preferredDate: preferredDate || null
         });
         await lead.save();
+
+        // Send Thank You Email
+        await sendInquiryThankYou(email, name, type || 'Inquiry');
+
         res.status(201).json({ message: 'Lead submitted successfully' });
     } catch (err) {
         res.status(400).json({ message: err.message });

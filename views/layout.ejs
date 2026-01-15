@@ -1,81 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= settings.siteName || 'Real Estate' %></title>
+    <title>
+        <%= settings.siteName || 'Real Estate' %>
+    </title>
     <meta name="description" content="<%= settings.seo?.metaDescription || '' %>">
     <link rel="icon" href="<%= settings.favicon || '' %>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Color manipulation utilities
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255, g /= 255, b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max == min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: h * 360, s: s * 100, l: l * 100 };
+        }
+
+        function hslToHex(h, s, l) {
+            l /= 100;
+            const a = s * Math.min(l, 1 - l) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
+        function generatePalette(baseHex) {
+            const rgb = hexToRgb(baseHex);
+            if (!rgb) return {};
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+            return {
+                50: hslToHex(hsl.h, hsl.s, 95),
+                100: hslToHex(hsl.h, hsl.s, 90),
+                200: hslToHex(hsl.h, hsl.s, 80),
+                300: hslToHex(hsl.h, hsl.s, 70),
+                400: hslToHex(hsl.h, hsl.s, 60),
+                500: baseHex, // Base color
+                600: hslToHex(hsl.h, hsl.s, 40),
+                700: hslToHex(hsl.h, hsl.s, 30),
+                800: hslToHex(hsl.h, hsl.s, 20),
+                900: hslToHex(hsl.h, hsl.s, 10),
+                950: hslToHex(hsl.h, hsl.s, 5),
+            };
+        }
+
+        const primaryHex = '<%= settings.primaryColor || "#1890ff" %>';
+        const primaryPalette = generatePalette(primaryHex);
+
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '<%= settings.primaryColor || "#1890ff" %>',
+                        primary: {
+                            DEFAULT: primaryHex,
+                            ...primaryPalette
+                        },
                     }
                 }
             }
         }
+
+        // Initialize Dark Mode
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
     </script>
     <style>
         :root {
-            --primary-color: <%= settings.primaryColor || "#1890ff" %>;
+            --primary-color: <%=settings.primaryColor || "#1890ff" %>;
         }
-        .bg-primary { background-color: var(--primary-color); }
-        .text-primary { color: var(--primary-color); }
-        .border-primary { border-color: var(--primary-color); }
+
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+
+        .text-primary {
+            color: var(--primary-color);
+        }
+
+        .border-primary {
+            border-color: var(--primary-color);
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-serif {
+            font-family: 'Merriweather', serif;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
     <%- include('partials/header') %>
-    
-    <main>
-        <%- body %>
-    </main>
 
-    <%- include('partials/footer') %>
+        <main>
+            <%- body %>
+        </main>
 
-    <!-- Custom Alert -->
-    <div id="custom-alert" class="fixed top-5 right-5 z-50 hidden transform transition-all duration-300 translate-x-full">
-        <div id="alert-content" class="bg-white border-l-4 p-4 shadow-xl rounded flex items-center gap-3">
-            <div id="alert-icon"></div>
-            <div>
-                <p id="alert-title" class="font-bold"></p>
-                <p id="alert-message" class="text-sm"></p>
+        <%- include('partials/footer') %>
+
+            <!-- Custom Alert -->
+            <div id="custom-alert"
+                class="fixed top-5 right-5 z-50 hidden transform transition-all duration-300 translate-x-full">
+                <div id="alert-content" class="bg-white border-l-4 p-4 shadow-xl rounded flex items-center gap-3">
+                    <div id="alert-icon"></div>
+                    <div>
+                        <p id="alert-title" class="font-bold"></p>
+                        <p id="alert-message" class="text-sm"></p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <script>
-        function showAlert(title, message, type = 'success') {
-            const alert = document.getElementById('custom-alert');
-            const content = document.getElementById('alert-content');
-            const titleEl = document.getElementById('alert-title');
-            const messageEl = document.getElementById('alert-message');
-            const iconEl = document.getElementById('alert-icon');
+            <script>
+                function showAlert(title, message, type = 'success') {
+                    const alert = document.getElementById('custom-alert');
+                    const content = document.getElementById('alert-content');
+                    const titleEl = document.getElementById('alert-title');
+                    const messageEl = document.getElementById('alert-message');
+                    const iconEl = document.getElementById('alert-icon');
 
-            titleEl.innerText = title;
-            messageEl.innerText = message;
+                    titleEl.innerText = title;
+                    messageEl.innerText = message;
 
-            if (type === 'success') {
-                content.className = 'bg-white border-l-4 border-green-500 p-4 shadow-xl rounded flex items-center gap-3';
-                iconEl.innerHTML = '<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
-            } else {
-                content.className = 'bg-white border-l-4 border-red-500 p-4 shadow-xl rounded flex items-center gap-3';
-                iconEl.innerHTML = '<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
-            }
+                    if (type === 'success') {
+                        content.className = 'bg-white border-l-4 border-green-500 p-4 shadow-xl rounded flex items-center gap-3';
+                        iconEl.innerHTML = '<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                    } else {
+                        content.className = 'bg-white border-l-4 border-red-500 p-4 shadow-xl rounded flex items-center gap-3';
+                        iconEl.innerHTML = '<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                    }
 
-            alert.classList.remove('hidden', 'translate-x-full');
-            setTimeout(() => {
-                alert.classList.add('translate-x-full');
-                setTimeout(() => alert.classList.add('hidden'), 300);
-            }, 5000);
-        }
-    </script>
+                    alert.classList.remove('hidden', 'translate-x-full');
+                    setTimeout(() => {
+                        alert.classList.add('translate-x-full');
+                        setTimeout(() => alert.classList.add('hidden'), 300);
+                    }, 5000);
+                }
+            </script>
 </body>
+
 </html>

@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
 const siteSettingsSchema = new mongoose.Schema({
-    logo: String,
     siteName: String,
+    logo: String,
     favicon: String,
-    primaryColor: { type: String, default: '#1890ff' },
+    adminSignature: { type: String },
+    enableAdminSignature: { type: Boolean, default: false },
+    primaryColor: {
+        type: String,
+        default: '#1890ff'
+    },
     contactPhone: String,
     whatsappNumber: String,
     email: String,

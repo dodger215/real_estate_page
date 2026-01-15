@@ -1,4 +1,4 @@
-// routes/uploader.js - Updated to handle both single and multiple
+// routes/uploader.js
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -20,11 +20,11 @@ const storage = multer.diskStorage({
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const subDir = path.join(uploadDir, `${year}/${month}/${day}`);
-        
+
         if (!fs.existsSync(subDir)) {
             fs.mkdirSync(subDir, { recursive: true });
         }
-        
+
         cb(null, subDir);
     },
     filename: function (req, file, cb) {
@@ -56,97 +56,20 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-// Unified upload endpoint that handles both single and multiple
-router.post('/upload', (req, res, next) => {
-    // Check if multiple files are being uploaded
-    const isMultiple = req.body.multiple === 'true' || req.body.multiple === true;
-    
-    if (isMultiple) {
-        // Use array middleware for multiple files
-        upload.array('files', 10)(req, res, next);
-    } else {
-        // Use single middleware for single file
-        upload.single('file')(req, res, next);
-    }
-}, (req, res) => {
-    try {
-        const isMultiple = req.body.multiple === 'true' || req.body.multiple === true;
-        
-        if (isMultiple) {
-            // Handle multiple files
-            if (!req.files || req.files.length === 0) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'No files uploaded' 
-                });
-            }
-
-            const files = req.files.map(file => ({
-                originalName: file.originalname,
-                filename: file.filename,
-                size: file.size,
-                mimetype: file.mimetype,
-                url: `/uploads/${file.filename}`,
-                fullUrl: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
-            }));
-
-            res.json({
-                success: true,
-                message: 'Files uploaded successfully',
-                data: files,
-                count: files.length,
-                isMultiple: true
-            });
-        } else {
-            // Handle single file
-            if (!req.file) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'No file uploaded' 
-                });
-            }
-
-            // Construct URL
-            const fileUrl = `/uploads/${req.file.filename}`;
-            const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
-
-            res.json({
-                success: true,
-                message: 'File uploaded successfully',
-                data: {
-                    originalName: req.file.originalname,
-                    filename: req.file.filename,
-                    size: req.file.size,
-                    mimetype: req.file.mimetype,
-                    url: fileUrl,
-                    fullUrl: fullUrl,
-                    path: req.file.path
-                },
-                isMultiple: false
-            });
-        }
-    } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
-        });
-    }
-});
-
-
-
 // Single file upload
 router.post('/upload', upload.single('file'), (req, res) => {
     try {
         if (!req.file) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'No file uploaded' 
+            return res.status(400).json({
+                success: false,
+                message: 'No file uploaded'
             });
         }
 
         // Construct URL
-        const fileUrl = `/uploads/${req.file.filename}`;
+        const publicDir = path.join(__dirname, '../public');
+        const relativePath = path.relative(publicDir, req.file.path);
+        const fileUrl = '/' + relativePath.split(path.sep).join('/');
         const fullUrl = `${req.protocol}://${req.get('host')}${fileUrl}`;
 
         res.json({
@@ -163,9 +86,9 @@ router.post('/upload', upload.single('file'), (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
     }
 });
@@ -174,20 +97,24 @@ router.post('/upload', upload.single('file'), (req, res) => {
 router.post('/upload-multiple', upload.array('files', 10), (req, res) => {
     try {
         if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'No files uploaded' 
+            return res.status(400).json({
+                success: false,
+                message: 'No files uploaded'
             });
         }
 
-        const files = req.files.map(file => ({
+        const publicDir = path.join(__dirname, '../public');
+        const relativePath = path.relative(publicDir, file.path);
+        const fileUrl = '/' + relativePath.split(path.sep).join('/');
+
+        return {
             originalName: file.originalname,
             filename: file.filename,
             size: file.size,
             mimetype: file.mimetype,
-            url: `/uploads/${file.filename}`,
-            fullUrl: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
-        }));
+            url: fileUrl,
+            fullUrl: `${req.protocol}://${req.get('host')}${fileUrl}`
+        };
 
         res.json({
             success: true,
@@ -196,9 +123,9 @@ router.post('/upload-multiple', upload.array('files', 10), (req, res) => {
             count: files.length
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
     }
 });
@@ -207,15 +134,15 @@ router.post('/upload-multiple', upload.array('files', 10), (req, res) => {
 router.delete('/delete/:filename', (req, res) => {
     try {
         const { filename } = req.params;
-        
+
         // Find file recursively in uploads directory
         function findFile(dir, targetFile) {
             const files = fs.readdirSync(dir);
-            
+
             for (const file of files) {
                 const filePath = path.join(dir, file);
                 const stat = fs.statSync(filePath);
-                
+
                 if (stat.isDirectory()) {
                     const found = findFile(filePath, targetFile);
                     if (found) return found;
@@ -225,28 +152,28 @@ router.delete('/delete/:filename', (req, res) => {
             }
             return null;
         }
-        
+
         const filePath = findFile(uploadDir, filename);
-        
+
         if (!filePath) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'File not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'File not found'
             });
         }
-        
+
         // Delete the file
         fs.unlinkSync(filePath);
-        
+
         res.json({
             success: true,
             message: 'File deleted successfully',
             data: { filename }
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
     }
 });
@@ -257,11 +184,11 @@ router.get('/list', (req, res) => {
         function getAllFiles(dir) {
             let results = [];
             const list = fs.readdirSync(dir);
-            
+
             list.forEach(file => {
                 const filePath = path.join(dir, file);
                 const stat = fs.statSync(filePath);
-                
+
                 if (stat.isDirectory()) {
                     results = results.concat(getAllFiles(filePath));
                 } else {
@@ -275,21 +202,21 @@ router.get('/list', (req, res) => {
                     });
                 }
             });
-            
+
             return results;
         }
-        
+
         const files = getAllFiles(uploadDir);
-        
+
         res.json({
             success: true,
             data: files,
             count: files.length
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
     }
 });
@@ -298,14 +225,14 @@ router.get('/list', (req, res) => {
 router.get('/info/:filename', (req, res) => {
     try {
         const { filename } = req.params;
-        
+
         function findFile(dir, targetFile) {
             const files = fs.readdirSync(dir);
-            
+
             for (const file of files) {
                 const filePath = path.join(dir, file);
                 const stat = fs.statSync(filePath);
-                
+
                 if (stat.isDirectory()) {
                     const found = findFile(filePath, targetFile);
                     if (found) return found;
@@ -315,18 +242,18 @@ router.get('/info/:filename', (req, res) => {
             }
             return null;
         }
-        
+
         const filePath = findFile(uploadDir, filename);
-        
+
         if (!filePath) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'File not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'File not found'
             });
         }
-        
+
         const stat = fs.statSync(filePath);
-        
+
         res.json({
             success: true,
             data: {
@@ -340,9 +267,9 @@ router.get('/info/:filename', (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
     }
 });

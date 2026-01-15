@@ -15,6 +15,7 @@ const agentSchema = new mongoose.Schema({
         twitter: String,
         linkedin: String
     },
+    deletedAt: { type: Date, default: null },
     isFeatured: { type: Boolean, default: false }
 }, { timestamps: true });
 

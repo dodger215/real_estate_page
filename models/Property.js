@@ -21,7 +21,8 @@ const propertySchema = new mongoose.Schema({
     mapEmbed: String,
     isFeatured: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: true },
-    agent: { type: mongoose.Schema.Types.ObjectId, ref: 'Agent' }
+    agent: { type: mongoose.Schema.Types.ObjectId, ref: 'Agent' },
+    deletedAt: { type: Date, default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Property', propertySchema);

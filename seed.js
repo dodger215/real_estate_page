@@ -25,10 +25,9 @@ const seedData = async () => {
         await PageContent.deleteMany({});
         await SiteSettings.deleteMany({});
 
-        // Hash passwords
-        const salt = await bcrypt.genSalt(10);
-        const adminPassword = await bcrypt.hash('BenAlb2026!', salt);
-        const editorPassword = await bcrypt.hash('Editor123!', salt);
+        // Passwords (will be hashed by User model pre-save hook)
+        const adminPassword = 'BenAlb2026!';
+        const editorPassword = 'Editor123!';
 
         // 1. Seed Admin Users (Directors)
         const admin1 = new User({
@@ -116,7 +115,7 @@ const seedData = async () => {
             ],
             businessLocations: [
                 'East Legon',
-                'Cantoments', 
+                'Cantoments',
                 'West Legon',
                 'West Hills Residential Area',
                 'Dansoman',
@@ -587,7 +586,7 @@ const seedData = async () => {
         console.log('WhatsApp: 0244741919, 0277383722');
         console.log('📍 Office: West Hills Residential Area, Behind West Hills Mall');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        
+
         process.exit();
     } catch (err) {
         console.error('❌ Seeding failed:', err);

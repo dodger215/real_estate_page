@@ -1,0 +1,209 @@
+<div class="flex items-center justify-center min-h-screen pt-32 pb-12 px-4 font-sans mt-20">
+    <div class="max-w-md w-full">
+        <div
+            class="bg-white rounded-[2.5rem] shadow-2xl p-10 md:p-12 border border-gray-100 text-center transform transition-all">
+            <!-- Icon Header -->
+            <div
+                class="w-20 h-20 bg-gray-900 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-gray-200">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-black text-gray-900 mb-4 tracking-tight uppercase">Security Access</h2>
+            <p class="text-gray-500 mb-10 leading-relaxed italic">
+                To protect your privacy, please verify your identity using the verification code sent to your registered
+                email address.
+            </p>
+
+            <!-- Request OTP Step -->
+            <div id="request-step">
+                <button id="request-btn"
+                    class="group relative w-full bg-gray-900 hover:bg-primary text-white font-black py-5 px-8 rounded-2xl transition-all duration-300 shadow-xl shadow-gray-200 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3">
+                    <span>Send Verification Code</span>
+                    <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Verify OTP Step -->
+            <div id="verify-step" class="hidden">
+                <div
+                    class="bg-green-50/50 border border-green-100 rounded-2xl p-4 mb-8 flex items-center gap-4 animate-bounce-subtle">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-green-800 font-bold text-sm">Code Sent Successfully!</p>
+                        <p class="text-green-600 text-xs uppercase tracking-widest">Please check your inbox</p>
+                    </div>
+                </div>
+
+                <form id="verify-form" class="space-y-6">
+                    <div>
+                        <label class="block font-bold text-xs mb-3 text-gray-400 uppercase tracking-[0.2em]">Enter
+                            6-Digit Code</label>
+                        <input type="text" id="otp-input" name="otp" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;"
+                            required maxlength="6"
+                            class="w-full h-20 px-6 bg-gray-50 border border-gray-100 rounded-2xl text-center text-4xl font-black tracking-[0.5em] focus:outline-none focus:ring-4 focus:ring-primary/20 focus:bg-white transition-all text-gray-900 placeholder:text-gray-200">
+                    </div>
+                    <button type="submit" id="verify-btn"
+                        class="w-full bg-primary text-white font-black py-5 px-8 rounded-2xl transition-all duration-300 shadow-xl shadow-primary/30 hover:brightness-110 hover:scale-[1.02] active:scale-95 uppercase tracking-widest text-sm">
+                        Verify & Access Document
+                    </button>
+                </form>
+            </div>
+
+            <!-- Error Alert -->
+            <div id="error-alert" class="hidden mt-8 bg-red-50 border border-red-100 rounded-2xl p-5 animate-shake">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                    <p id="error-message" class="text-red-800 text-sm font-semibold text-left"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-8 text-center text-[10px] text-gray-400 uppercase tracking-[0.3em]">
+            <p>&copy; <%= new Date().getFullYear() %>
+                    <%= settings.siteName || 'Estate' %> &bull; Secure Verification</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes bounce-subtle {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-4px);
+        }
+    }
+
+    .animate-bounce-subtle {
+        animation: bounce-subtle 2s infinite ease-in-out;
+    }
+
+    @keyframes shake {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-4px);
+        }
+
+        75% {
+            transform: translateX(4px);
+        }
+    }
+
+    .animate-shake {
+        animation: shake 0.4s ease-in-out;
+    }
+</style>
+
+<script>
+    const submissionId = '<%= submissionId %>';
+
+    // Request OTP
+    document.getElementById('request-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('request-btn');
+        btn.disabled = true;
+        btn.innerHTML = `
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Sending Code...</span>
+        `;
+        hideError();
+
+        try {
+            const response = await fetch('/api/public/otp/request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submissionId })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Failed to request OTP');
+
+            document.getElementById('request-step').classList.add('hidden');
+            document.getElementById('verify-step').classList.remove('hidden');
+            setTimeout(() => document.getElementById('otp-input').focus(), 100);
+        } catch (err) {
+            showError(err.message);
+            btn.disabled = false;
+            btn.innerHTML = `
+                <span>Send Verification Code</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+            `;
+        }
+    });
+
+    // Verify OTP
+    document.getElementById('verify-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('verify-btn');
+        const otpInput = document.getElementById('otp-input');
+
+        btn.disabled = true;
+        btn.textContent = 'Verifying Access...';
+        hideError();
+
+        try {
+            const response = await fetch('/api/public/otp/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submissionId, otp: otpInput.value })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Invalid verification code');
+
+            localStorage.setItem(`verified_${submissionId}`, 'true');
+            window.location.href = `/public/document/${submissionId}`;
+        } catch (err) {
+            showError(err.message);
+            btn.disabled = false;
+            btn.textContent = 'Verify & Access Document';
+            otpInput.value = '';
+            otpInput.focus();
+        }
+    });
+
+    function showError(message) {
+        const errorAlert = document.getElementById('error-alert');
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('hidden');
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function hideError() {
+        document.getElementById('error-alert').classList.add('hidden');
+    }
+</script>

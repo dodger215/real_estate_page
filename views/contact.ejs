@@ -1,12 +1,12 @@
-<section class="py-24 bg-gray-50">
+<section class="py-24 bg-gray-50 dark:bg-gray-900 transition-colors duration-300 mt-20">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div>
-                    <h1 class="text-5xl font-bold mb-8">
+                    <h1 class="text-5xl font-bold mb-8 dark:text-white">
                         <%= content.title || 'Get in Touch' %>
                     </h1>
-                    <p class="text-xl text-gray-600 mb-12">
+                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-12">
                         <%= content.description || 'Have questions? We are here to help you find your dream home.' %>
                     </p>
 
@@ -21,8 +21,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="font-bold text-lg mb-1">Office Location</h3>
-                                <p class="text-gray-600">
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Office Location</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
                                     <%= content.officeLocation || '123 Luxury Way, Beverly Hills, CA' %>
                                 </p>
                             </div>
@@ -37,45 +37,46 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="font-bold text-lg mb-1">Phone Number</h3>
-                                <p class="text-gray-600">
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Phone Number</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
                                     <%= settings.contactPhone %>
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="h-[300px] rounded-3xl overflow-hidden border shadow-sm">
+                    <div class="h-[300px] rounded-3xl overflow-hidden border dark:border-gray-700 shadow-sm">
                         <iframe
                             src="<%= content.mapEmbed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.83543450937!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1625123456789!5m2!1sen!2sus' %>"
                             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
 
-                <div class="bg-white p-12 rounded-[3rem] shadow-xl border border-gray-100">
-                    <h2 class="text-3xl font-bold mb-8">Send a Message</h2>
+                <div
+                    class="bg-white dark:bg-gray-800 p-12 rounded-[3rem] shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+                    <h2 class="text-3xl font-bold mb-8 dark:text-white">Send a Message</h2>
                     <form id="contact-form" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-semibold mb-2">First Name</label>
+                                <label class="block text-sm font-semibold mb-2 dark:text-white">First Name</label>
                                 <input type="text" name="firstName" required
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary">
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold mb-2">Last Name</label>
+                                <label class="block text-sm font-semibold mb-2 dark:text-white">Last Name</label>
                                 <input type="text" name="lastName" required
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary">
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Email Address</label>
+                            <label class="block text-sm font-semibold mb-2 dark:text-white">Email Address</label>
                             <input type="email" name="email" required
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Subject</label>
+                            <label class="block text-sm font-semibold mb-2 dark:text-white">Subject</label>
                             <select name="subject"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary">
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
                                 <option>General Inquiry</option>
                                 <option>Buying a Property</option>
                                 <option>Selling a Property</option>
@@ -83,9 +84,9 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Message</label>
+                            <label class="block text-sm font-semibold mb-2 dark:text-white">Message</label>
                             <textarea name="message" rows="5" required
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary"></textarea>
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary"></textarea>
                         </div>
                         <button type="submit"
                             class="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg shadow-primary/20">

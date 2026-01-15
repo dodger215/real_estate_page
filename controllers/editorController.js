@@ -15,7 +15,11 @@ class CrudController {
 
     getAll = async (req, res) => {
         try {
-            const items = await this.Model.find().sort({ createdAt: -1 });
+            const filter = {};
+            if (this.Model.schema.path('deletedAt')) {
+                filter.deletedAt = null;
+            }
+            const items = await this.Model.find(filter).sort({ createdAt: -1 });
             res.json(items);
         } catch (err) {
             res.status(500).json({ message: `Error fetching items: ${err.message}` });
@@ -57,11 +61,53 @@ class CrudController {
 
     delete = async (req, res) => {
         try {
-            const item = await this.Model.findByIdAndDelete(req.params.id);
-            if (!item) return res.status(404).json({ message: 'Item not found' });
-            res.json({ message: 'Deleted successfully' });
+            if (this.Model.schema.path('deletedAt')) {
+                // Soft delete
+                const item = await this.Model.findByIdAndUpdate(req.params.id, { deletedAt: new Date() }, { new: true });
+                if (!item) return res.status(404).json({ message: 'Item not found' });
+                res.json({ message: 'Moved to recycle bin' });
+            } else {
+                // Hard delete
+                const item = await this.Model.findByIdAndDelete(req.params.id);
+                if (!item) return res.status(404).json({ message: 'Item not found' });
+                res.json({ message: 'Deleted successfully' });
+            }
         } catch (err) {
             res.status(500).json({ message: `Error deleting item: ${err.message}` });
+        }
+    };
+
+    // Recycle Bin methods
+    getDeleted = async (req, res) => {
+        try {
+            if (!this.Model.schema.path('deletedAt')) {
+                return res.status(400).json({ message: 'This resource does not support recycle bin' });
+            }
+            const items = await this.Model.find({ deletedAt: { $ne: null } }).sort({ deletedAt: -1 });
+            res.json(items);
+        } catch (err) {
+            res.status(500).json({ message: `Error fetching deleted items: ${err.message}`, stack: err.stack });
+            console.error('getDeleted Error:', err);
+        }
+    };
+
+    restore = async (req, res) => {
+        try {
+            const item = await this.Model.findByIdAndUpdate(req.params.id, { deletedAt: null }, { new: true });
+            if (!item) return res.status(404).json({ message: 'Item not found' });
+            res.json(item);
+        } catch (err) {
+            res.status(500).json({ message: `Error restoring item: ${err.message}` });
+        }
+    };
+
+    permanentDelete = async (req, res) => {
+        try {
+            const item = await this.Model.findByIdAndDelete(req.params.id);
+            if (!item) return res.status(404).json({ message: 'Item not found' });
+            res.json({ message: 'Permanently deleted' });
+        } catch (err) {
+            res.status(500).json({ message: `Error permanently deleting item: ${err.message}` });
         }
     };
 }
@@ -81,6 +127,10 @@ module.exports = {
     createProperty: propertyController.create,
     updateProperty: propertyController.update,
     deleteProperty: propertyController.delete,
+    // Property Recycle Bin
+    getDeletedProperties: propertyController.getDeleted,
+    restoreProperty: propertyController.restore,
+    permanentDeleteProperty: propertyController.permanentDelete,
 
     // Blogs
     getBlogs: blogController.getAll,
@@ -95,6 +145,10 @@ module.exports = {
     createAgent: agentController.create,
     updateAgent: agentController.update,
     deleteAgent: agentController.delete,
+    // Agent Recycle Bin
+    getDeletedAgents: agentController.getDeleted,
+    restoreAgent: agentController.restore,
+    permanentDeleteAgent: agentController.permanentDelete,
 
     // Services
     getServices: serviceController.getAll,
