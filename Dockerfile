@@ -6,6 +6,13 @@ WORKDIR /app
 # Install necessary tools
 RUN apk add --no-cache bash curl
 
+# Environment Variables
+ENV PORT=5000
+ENV MONGODB_URI=mongodb+srv://kelvinenosdzah2_db_user:dodger_ked@cluster0.5lrjcet.mongodb.net/estate_db?retryWrites=true&w=majority
+ENV JWT_SECRET=your_jwt_secret_key_here
+ENV GMAIL_USER=kelvinenosdzah2@gmail.com
+ENV GMAIL_PASS=fcrtzzascghvgxzk
+
 # Copy package files
 COPY package*.json ./
 COPY package-lock.json ./
