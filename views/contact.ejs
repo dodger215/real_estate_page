@@ -4,10 +4,10 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div>
                     <h1 class="text-5xl font-bold mb-8 dark:text-white">
-                        <%= content.title || 'Get in Touch' %>
+                        <%= contactContent.title || 'Get in Touch' %>
                     </h1>
                     <p class="text-xl text-gray-600 dark:text-gray-300 mb-12">
-                        <%= content.description || 'Have questions? We are here to help you find your dream home.' %>
+                        <%= contactContent.description || 'Have questions? We are here to help you find your dream home.' %>
                     </p>
 
                     <div class="space-y-8 mb-12">
@@ -23,7 +23,7 @@
                             <div>
                                 <h3 class="font-bold text-lg mb-1 dark:text-white">Office Location</h3>
                                 <p class="text-gray-600 dark:text-gray-400">
-                                    <%= content.officeLocation || '123 Luxury Way, Beverly Hills, CA' %>
+                                    <%= settings.officeAddress || contactContent.officeLocation || '123 Luxury Way, Beverly Hills, CA' %>
                                 </p>
                             </div>
                         </div>
@@ -39,15 +39,52 @@
                             <div>
                                 <h3 class="font-bold text-lg mb-1 dark:text-white">Phone Number</h3>
                                 <p class="text-gray-600 dark:text-gray-400">
-                                    <%= settings.contactPhone %>
+                                    <%= settings.contactPhone || 'Contact us' %>
                                 </p>
                             </div>
                         </div>
+                        <% if (settings.email) { %>
+                        <div class="flex items-start gap-6">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Email Address</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    <%= settings.email %>
+                                </p>
+                            </div>
+                        </div>
+                        <% } %>
+                        <% if (settings.whatsappNumber) { %>
+                        <div class="flex items-start gap-6">
+                            <div
+                                class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-4.821 7.454c-1.893 0-3.748-.508-5.37-1.467l-.385-.228-3.991 1.046 1.065-3.891-.251-.399c-.95-1.511-1.451-3.268-1.451-5.074 0-5.184 4.217-9.401 9.401-9.401 2.511 0 4.872.98 6.647 2.756 1.777 1.776 2.757 4.137 2.757 6.648 0 5.184-4.217 9.401-9.402 9.401m11.567-11.57C24.214 4.072 18.897-1.242 12.39-1.242 5.882-1.242.565 4.072.565 10.58c0 2.08.543 4.112 1.574 5.911L0 23.424l7.147-1.874c1.739.948 3.697 1.449 5.688 1.449 6.505 0 11.821-5.314 11.821-11.821 0-3.153-1.229-6.118-3.461-8.35" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">WhatsApp</h3>
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    <a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>"
+                                        class="hover:text-primary transition">
+                                        <%= settings.whatsappNumber %>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <% } %>
                     </div>
 
                     <div class="h-[300px] rounded-3xl overflow-hidden border dark:border-gray-700 shadow-sm">
                         <iframe
-                            src="<%= content.mapEmbed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.83543450937!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1625123456789!5m2!1sen!2sus' %>"
+                            src="<%= contactContent.mapEmbed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.83543450937!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1625123456789!5m2!1sen!2sus' %>"
                             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
@@ -68,19 +105,27 @@
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold mb-2 dark:text-white">Email Address</label>
-                            <input type="email" name="email" required
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 dark:text-white">Email Address</label>
+                                <input type="email" name="email" required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 dark:text-white">Phone Number</label>
+                                <input type="tel" name="phone"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold mb-2 dark:text-white">Subject</label>
                             <select name="subject"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white outline-none focus:border-primary">
-                                <option>General Inquiry</option>
-                                <option>Buying a Property</option>
-                                <option>Selling a Property</option>
-                                <option>Renting</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Buying a Property">Buying a Property</option>
+                                <option value="Selling a Property">Selling a Property</option>
+                                <option value="Renting">Renting</option>
+                                <option value="Construction">Construction</option>
                             </select>
                         </div>
                         <div>
@@ -105,7 +150,7 @@
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
         data.name = `${data.firstName} ${data.lastName}`;
-        data.type = 'General';
+        data.type = data.subject; // Use selected subject as type
 
         try {
             const response = await fetch('/api/leads', {
@@ -118,7 +163,8 @@
                 showAlert('Success!', 'Your message has been sent. We will get back to you soon.', 'success');
                 e.target.reset();
             } else {
-                showAlert('Error', 'Something went wrong. Please try again.', 'error');
+                const error = await response.json();
+                showAlert('Error', error.message || 'Something went wrong. Please try again.', 'error');
             }
         } catch (err) {
             showAlert('Error', 'Failed to connect to server.', 'error');

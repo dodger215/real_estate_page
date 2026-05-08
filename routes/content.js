@@ -29,4 +29,38 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
+// Update specific contact page content
+router.patch('/contact', auth, async (req, res) => {
+    try {
+        let content = await PageContent.findOne();
+        if (!content) {
+            content = new PageContent({ contactPage: req.body });
+            await content.save();
+        } else {
+            content.contactPage = { ...content.contactPage.toObject(), ...req.body };
+            await content.save();
+        }
+        res.json(content.contactPage);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Update home page location section
+router.patch('/location', auth, async (req, res) => {
+    try {
+        let content = await PageContent.findOne();
+        if (!content) {
+            content = new PageContent({ location: req.body });
+            await content.save();
+        } else {
+            content.location = { ...content.location.toObject(), ...req.body };
+            await content.save();
+        }
+        res.json(content.location);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;
