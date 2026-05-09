@@ -4,7 +4,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install necessary tools
-RUN apk add --no-cache bash curl
+RUN apk add --no-cache bash curl netcat-openbsd
 
 # Environment Variables
 ENV PORT=5000

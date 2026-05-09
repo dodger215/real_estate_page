@@ -104,8 +104,12 @@
                         <% featuredProperties.forEach(property=> { %>
                             <div class="group">
                                 <div class="relative h-80 rounded-[2.5rem] overflow-hidden mb-6 shadow-lg">
-                                    <img src="<%= property.featuredImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>"
-                                        class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                    <% if (property.videoTour) { %>
+                                        <video src="<%= property.videoTour %>" class="w-full h-full object-cover" autoplay muted loop playsinline></video>
+                                    <% } else { %>
+                                        <img src="<%= property.featuredImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' %>"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                    <% } %>
                                     <div class="absolute top-6 left-6">
                                         <span
                                             class="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-gray-900">
@@ -119,6 +123,16 @@
                                 <p class="text-gray-500 mb-4 dark:text-gray-400">
                                     <%= property.location %>
                                 </p>
+                                <% if (property.locationFeatures && property.locationFeatures.length > 0) { %>
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        <% property.locationFeatures.forEach(feature => { %>
+                                            <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                                                <%= feature %>
+                                            </span>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+
                                 <div class="flex justify-between items-center">
                                     <span class="text-2xl font-bold text-primary">₵‎<%= property.price?.toLocaleString()
                                             || property.priceRange %></span>

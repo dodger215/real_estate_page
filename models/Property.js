@@ -18,6 +18,7 @@ const propertySchema = new mongoose.Schema({
     floorPlans: [String],
     videoTour: String,
     amenities: [String],
+    locationFeatures: [String],
     mapEmbed: String,
     isFeatured: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: true },

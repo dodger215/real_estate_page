@@ -3,10 +3,18 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <!-- Main Content -->
             <div class="lg:col-span-2">
-                <h1 class="text-4xl font-bold mb-4 dark:text-white">
-                    <%= property.title %>
-                </h1>
-                <p class="text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <a href="/" class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 text-gray-500 hover:text-primary transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </a>
+                    <h1 class="text-4xl font-bold dark:text-white">
+                        <%= property.title %>
+                    </h1>
+                </div>
+
+                <p class="text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
@@ -15,13 +23,36 @@
                     <%= property.location %>
                 </p>
 
-                <!-- Gallery -->
-                <div class="grid grid-cols-2 gap-4 mb-12">
-                    <div class="col-span-2 h-[400px] rounded-3xl overflow-hidden shadow-lg">
-                        <img src="<%= property.featuredImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
-                            class="w-full h-full object-cover">
+                <% if (property.locationFeatures && property.locationFeatures.length > 0) { %>
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <% property.locationFeatures.forEach(feature => { %>
+                            <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                <%= feature %>
+                            </span>
+                        <% }) %>
                     </div>
-                    <% (property.images || []).slice(0, 2).forEach(img=> { %>
+                <% } %>
+
+                <!-- Gallery & Video -->
+                <div class="grid grid-cols-2 gap-4 mb-12">
+                    <% if (property.videoTour) { %>
+                        <div class="col-span-2 h-[400px] rounded-3xl overflow-hidden shadow-lg bg-black">
+                            <video src="<%= property.videoTour %>" class="w-full h-full object-cover" controls autoplay muted loop></video>
+                        </div>
+                    <% } else { %>
+                        <div class="col-span-2 h-[400px] rounded-3xl overflow-hidden shadow-lg">
+                            <img src="<%= property.featuredImage || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>"
+                                class="w-full h-full object-cover">
+                        </div>
+                    <% } %>
+                    
+                    <% if (property.videoTour) { %>
+                        <div class="h-48 rounded-3xl overflow-hidden shadow-lg">
+                            <img src="<%= property.featuredImage %>" class="w-full h-full object-cover">
+                        </div>
+                    <% } %>
+
+                    <% (property.images || []).slice(0, property.videoTour ? 1 : 2).forEach(img=> { %>
                         <div class="h-48 rounded-3xl overflow-hidden shadow-lg">
                             <img src="<%= img %>" class="w-full h-full object-cover">
                         </div>
