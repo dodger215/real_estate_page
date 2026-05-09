@@ -37,7 +37,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Pre-flight for all routes
+app.options('/{*path}', cors(corsOptions)); // Pre-flight for all routes (Express 5 syntax)
+
 
 // ── Body parsers (increase limit for base64 / large payloads) ─────────────────
 app.use(express.json({ limit: '100mb' }));
