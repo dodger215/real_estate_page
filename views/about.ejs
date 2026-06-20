@@ -42,7 +42,22 @@
                 </p>
             </div>
 
-
+            <!-- Team -->
+            <div>
+                <h2 class="text-3xl font-bold mb-12 text-center dark:text-white">Meet Our Experts</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <% agents.forEach(agent=> { %>
+                        <div class="text-center">
+                        <h3 class="text-xl font-bold mb-1 dark:text-white">
+                                <%= agent.name %>
+                            </h3>
+                            <p class="text-primary font-medium">
+                                <%= agent.role %>
+                            </p>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
         </div>
     </div>
 </section>
