@@ -41,7 +41,7 @@
                                     </a>
                                 </div>
 
-                                <div
+                                <!-- <div
                                     class="hidden md:block bg-white/10 backdrop-blur-xl p-2 rounded-3xl border border-white/20 max-w-2xl">
                                     <form action="/properties" method="GET" class="flex flex-row gap-2">
                                         <select name="type"
@@ -50,14 +50,14 @@
                                             <option value="Apartment" class="text-black">Apartment</option>
                                             <option value="Villa" class="text-black">Villa</option>
                                         </select>
-                                        <input type="text" name="location" placeholder="Location..."
+                                        <input type="text" name="location" placeholder="Location..." value="Ghana, pokuase, accra"
                                             class="bg-transparent text-white px-6 py-3 outline-none flex-grow placeholder:text-white/60 font-bold">
                                         <button type="submit"
                                             class="bg-primary text-white px-8 py-3 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:opacity-90 transition shadow-lg shadow-primary/20">
                                             Search
                                         </button>
                                     </form>
-                                </div>
+                                </div> -->
 
                                 <!-- Mobile Search Trigger -->
                                 <div class="md:hidden w-full">
@@ -217,7 +217,7 @@
                                             <div>
                                                 <p class="text-sm text-gray-500 dark:text-gray-400">Location</p>
                                                 <p class="font-bold dark:text-white">
-                                                    <%= content.property?.location || 'Downtown' %>
+                                                    <%= content.property?.location || 'Ghana, pokuase, accra' %>
                                                 </p>
                                             </div>
                                         </div>
@@ -322,14 +322,14 @@
                                         <div
                                             class="h-[400px] rounded-3xl overflow-hidden shadow-xl border dark:border-gray-700">
                                             <iframe
-                                                src="<%= content.location?.mapEmbed || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.83543450937!2d-122.4194155!3d37.7749295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1625123456789!5m2!1sen!2sus' %>"
+                                                src="<%= content.location?.mapEmbed || 'https://maps.google.com/maps?q=Ghana,+pokuase,+accra&t=&z=13&ie=UTF8&iwloc=&output=embed' %>"
                                                 width="100%" height="100%" style="border:0;" allowfullscreen=""
                                                 loading="lazy"></iframe>
                                         </div>
                                         <div>
                                             <h2 class="text-4xl font-bold mb-6 dark:text-white">Prime Location</h2>
                                             <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                                                <%= content.location?.address %>
+                                                <%= content.location?.address || 'Ghana, pokuase, accra' %>
                                             </p>
                                             <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
                                                 <%= content.location?.neighborhoodDescription %>
@@ -660,6 +660,7 @@
                                                                 <div class="relative group">
                                                                     <input type="text" name="location"
                                                                         placeholder="City, Area or Landmark..."
+                                                                        value="Ghana, pokuase, accra"
                                                                         class="w-full h-16 px-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-primary focus:bg-white dark:focus:bg-gray-900 dark:text-white font-bold transition-all outline-none">
                                                                     <svg class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                                                                         fill="none" stroke="currentColor"
